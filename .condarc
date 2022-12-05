@@ -1,0 +1,8 @@
+channels:
+  - defaults
+  - conda-forge
+auto_activate_base: false
+envs_dirs:
+  - /var/tmp/scratch
+  - /home/gridsan/groups/ccg/envs
+  - /run/user/$UID/conda-envs  # The UID should be replaced with your own UID

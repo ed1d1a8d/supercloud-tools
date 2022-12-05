@@ -1,2 +1,2 @@
 # supercloud
-Scripts related to working with the MIT supercloud.
+Scripts, configs, and binaries helpful for working on MIT supercloud.
