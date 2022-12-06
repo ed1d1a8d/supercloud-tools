@@ -9,5 +9,5 @@ sbatch -J Dev_$1 \
     --cpus-per-task=20 \
     --time='24:00:00' \
     -o $HOME/slurm-logs/dev/slurm-%j.out \
-    --wrap 'srun mallory' \
+    --wrap 'srun /home/gridsan/groups/ccg/programs/bin/mallory' \
     2>&1
