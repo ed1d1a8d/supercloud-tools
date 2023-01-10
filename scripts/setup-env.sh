@@ -31,8 +31,8 @@ readonly ENV_NAME=${@:$OPTIND:1}
 # Find environment in CONDA_PACK_ENV_PATH
 SRC_ENV_PATH=''
 for dir in $(echo $CONDA_PACK_ENV_PATH | tr ':' ' '); do
-    if [ -f "$dir/$ENV_NAME.tar.gz" ]; then
-        SRC_ENV_PATH="$dir/$ENV_NAME.tar.gz"
+    if [ -f "$dir/$ENV_NAME.tar" ]; then
+        SRC_ENV_PATH="$dir/$ENV_NAME.tar"
         break
     fi
 done
@@ -59,7 +59,7 @@ fi
 # Untar environment to destination
 mkdir -p $DST_ENV_PATH
 echo "Unpacking $SRC_ENV_PATH to $DST_ENV_PATH ..."
-tar -xzf $SRC_ENV_PATH -C $DST_ENV_PATH
+tar -xf $SRC_ENV_PATH -C $DST_ENV_PATH
 echo "Done unpacking."
 
 # Cleanup prefixes
