@@ -2,11 +2,12 @@
 
 ###############################################################################
 # Setup global variables
+# This script loads an environment from $CONDA_PACK_ENV_PATH.
 # Environments are copied to /run/user/$UID/conda-envs/ where they are unpacked
 # with conda pack. /run/user/$UID is a tmpfs filesystem, so the environments
 # are deleted when all processes belong to $UID are terminated.
 ###############################################################################
-readonly SRC_ENV_DIR=/home/gridsan/groups/ccg/env-tars/conda-pack
+readonly CONDA_PACK_ENV_PATH
 readonly DST_ENV_DIR=/run/user/$UID/conda-envs
 mkdir -p $DST_ENV_DIR
 ###############################################################################
@@ -15,21 +16,31 @@ mkdir -p $DST_ENV_DIR
 ###############################################################################
 # Parse command line args
 ###############################################################################
-RANDOM_NAME='false'
+USE_RANDOM_DST_NAME='false'
 while getopts 'r' flag; do
   case "${flag}" in
-    r) RANDOM_NAME='true' ;;
+    r) USE_RANDOM_DST_NAME='true' ;;
     *) echo "Usage: ./setup-env.sh [-r (random dst)] <env_name> "
        exit 1 ;;
   esac
 done
-readonly RANDOM_NAME
+readonly USE_RANDOM_DST_NAME
 
 readonly ENV_NAME=${@:$OPTIND:1}
-readonly SRC_ENV_PATH=$SRC_ENV_DIR/$ENV_NAME.tar.gz
-# Check that the environment name is valid
+
+# Find environment in CONDA_PACK_ENV_PATH
+SRC_ENV_PATH=''
+for dir in $(echo $CONDA_PACK_ENV_PATH | tr ':' ' '); do
+    if [ -f "$dir/$ENV_NAME.tar.gz" ]; then
+        SRC_ENV_PATH="$dir/$ENV_NAME.tar.gz"
+        break
+    fi
+done
+readonly SRC_ENV_PATH
+
+# Check that we actually found an environment.
 if [ ! -f "$SRC_ENV_PATH" ]; then
-  echo "Error: $SRC_ENV_PATH does not exist"
+  echo "Error: Could not find $ENV_NAME in CONDA_PACK_ENV_PATH."
   exit 1
 fi
 ###############################################################################
@@ -39,7 +50,7 @@ fi
 ###############################################################################
 
 # Get destination environment name
-if [[ $RANDOM_NAME == 'true' ]]; then
+if [[ $USE_RANDOM_DST_NAME == 'true' ]]; then
   readonly DST_ENV_PATH=$(TMPDIR=$DST_ENV_DIR mktemp -d -t $ENV_NAME-XXXXXXXX)
 else
   readonly DST_ENV_PATH=$DST_ENV_DIR/$ENV_NAME
