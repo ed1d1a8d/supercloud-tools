@@ -1,0 +1,5 @@
+# You should put the following contents in ~/.ssh/config on supercloud
+
+# Proxy through a login-node to connect to GitHub via ssh.
+Match host github.com exec "! hostname | grep -qF login-2"
+    ProxyJump login-2

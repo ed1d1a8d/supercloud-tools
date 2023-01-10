@@ -1,0 +1,25 @@
+# This ssh config is meant for your local computer
+# You should replace twang with your supercloud username
+
+Host supercloud-random
+    Hostname txe1-login.mit.edu
+    User twang
+    IdentityFile ~/.ssh/supercloud-twang
+    IdentitiesOnly yes
+    ForwardAgent yes
+
+Host supercloud
+    ProxyJump supercloud-random
+    Hostname login-2
+    User twang
+    IdentityFile ~/.ssh/supercloud-twang
+    IdentitiesOnly yes
+    ForwardAgent yes
+
+Host supercloud-dev
+    ProxyJump supercloud-random
+    Hostname <to-be-determined>
+    User twang
+    IdentityFile ~/.ssh/supercloud-twang
+    IdentitiesOnly yes
+    ForwardAgent yes
