@@ -24,7 +24,7 @@ class ProgramArgs:
     )
 
     gpus: int = dataclasses.field(
-        default=2, metadata={"help": "Number of gpus to request."}
+        default=1, metadata={"help": "Number of gpus to request."}
     )
 
     hours: int = dataclasses.field(
@@ -40,7 +40,7 @@ class ProgramArgs:
                 f"--{field.name.replace('_', '-')}",
                 default=field.default,
                 type=field.type,
-                help=field.metadata["help"],
+                help=field.metadata["help"] + f" (default: {field.default})",
             )
 
         return cls(**vars(parser.parse_args()))
