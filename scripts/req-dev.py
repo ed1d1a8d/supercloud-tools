@@ -47,6 +47,13 @@ class ProgramArgs:
 
 
 def main(args: ProgramArgs):
+    print(
+        "Requesting devbox with",
+        f"{args.gpus} gpus,",
+        f"{args.cpus} cpus,",
+        f"for {args.hours} hours...",
+    )
+
     # Get absolute path to mallory
     script_dir = pathlib.Path(__file__).parent.resolve()
     mallory_path = (script_dir.parent / "bin" / "mallory").absolute()
