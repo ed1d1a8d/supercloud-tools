@@ -31,6 +31,11 @@ class ProgramArgs:
         default=24, metadata={"help": "Number of hours to request."}
     )
 
+    blacklist: str = dataclasses.field(
+        default="",
+        metadata={"help": "Blacklist of nodes to avoid, comma separated."},
+    )
+
     @classmethod
     def from_cli(cls):
         parser = argparse.ArgumentParser(description="Launches a devbox.")
@@ -64,19 +69,23 @@ def main(args: ProgramArgs):
     log_dir.mkdir(parents=True, exist_ok=True)
 
     # Construct sbatch command
-    sbatch_args = [
-        "sbatch",
-        "--qos=high",
-        f"--job-name={args.job_name}",
-        f"--cpus-per-task={args.cpus}",
-        f"--time={args.hours}:00:00",
-        f"--output={log_dir}/{args.job_name}-%j.out",
-        "--wrap",
-        f"srun {mallory_path}",
-    ] + (
-        [f"--gres=gpu:volta:{args.gpus}"]
-        if args.gpus > 0
-        else ["--partition=xeon-p8"]  # Use p8 partition for cpu-only jobs
+    sbatch_args = (
+        [
+            "sbatch",
+            "--qos=high",
+            f"--job-name={args.job_name}",
+            f"--cpus-per-task={args.cpus}",
+            f"--time={args.hours}:00:00",
+            f"--output={log_dir}/{args.job_name}-%j.out",
+            "--wrap",
+            f"srun {mallory_path}",
+        ]
+        + (
+            [f"--gres=gpu:volta:{args.gpus}"]
+            if args.gpus > 0
+            else ["--partition=xeon-p8"]  # Use p8 partition for cpu-only jobs
+        )
+        + ([f"--exclude={args.blacklist}"] if len(args.blacklist) > 0 else [])
     )
 
     # Launch job with sbatch
