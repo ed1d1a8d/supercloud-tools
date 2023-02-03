@@ -11,6 +11,13 @@ class ProgramArgs:
         default="devbox", metadata={"help": "Name of the job."}
     )
 
+    qos: str = dataclasses.field(
+        default="high",
+        metadata={
+            "help": "Quality of service to request. (Can be normal or high).",
+        },
+    )
+
     cpus: int = dataclasses.field(
         default=20,
         metadata={
@@ -72,7 +79,7 @@ def main(args: ProgramArgs):
     sbatch_args = (
         [
             "sbatch",
-            "--qos=high",
+            f"--qos={args.qos}",
             f"--job-name={args.job_name}",
             f"--cpus-per-task={args.cpus}",
             f"--time={args.hours}:00:00",
