@@ -31,7 +31,7 @@ class ProgramArgs:
     )
 
     gpus: int = dataclasses.field(
-        default=1, metadata={"help": "Number of gpus to request."}
+        default=0, metadata={"help": "Number of gpus to request."}
     )
 
     hours: int = dataclasses.field(
