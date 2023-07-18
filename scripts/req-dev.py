@@ -68,7 +68,7 @@ def main(args: ProgramArgs):
 
     # Get absolute path to mallory
     script_dir = pathlib.Path(__file__).parent.resolve()
-    mallory_path = (script_dir.parent / "bin" / "mallory").absolute()
+    sleep_path = (script_dir / "sleep.sh").absolute()
 
     # Make log directory
     # mkdir -p $HOME/slurm-logs/dev
@@ -85,7 +85,7 @@ def main(args: ProgramArgs):
             f"--time={args.hours}:00:00",
             f"--output={log_dir}/{args.job_name}-%j.out",
             "--wrap",
-            f"srun {mallory_path}",
+            f"srun {sleep_path}",
         ]
         + (
             [f"--gres=gpu:volta:{args.gpus}"]
